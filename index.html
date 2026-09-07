@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description"
+    content="One to One for Research and Polling - Bureau d'études et d'analyses d'opinion internationale dans la région MENA. Partenaire national officiel d'Afrobarometer en Tunisie.">
+  <meta name="theme-color" content="#0D2E16">
+  <title>One to One | Research & Polling</title>
+
+  <!-- Polices Google Fonts (Plus Jakarta Sans & Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Leaflet CSS for Real Geographic Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM - INSTITUTIONAL RESEARCH CONSULTANCY
+       ========================================================================== */
+    :root {
+      /* Palette Institutionnelle */
+      --color-primary-dark: #0D2E16;
+      /* Vert sombre profond institutionnel */
+      --color-primary-medium: #154D26;
+      /* Vert intermédiaire pour cartes */
+      --color-brand-green: #1F9648;
+      /* Vert de marque officiel logo */
+      --color-brand-hover: #177A3A;
+      /* Survol vert */
+      --color-accent-light: #EBF5EE;
+      /* Fond vert très doux */
+      --color-accent-green: #2BE06B;
+      /* Vert éclatant pour sous-lignages et indicateurs */
+
+      /* Typographie & Neutres chaleureux */
+      --color-text-title: #1A211E;
+      /* Anthracite profond pour titres */
+      --color-text-body: #3C4742;
+      /* Gris anthracite lisible pour le texte */
+      --color-text-muted: #62706A;
+      /* Gris neutre discret pour sous-titres */
+      --color-bg-base: #FAFBF9;
+      /* Fond ivoire / off-white raffiné */
+      --color-bg-surface: #FFFFFF;
+      /* Surfaces blanches */
+      --color-bg-subtle: #F2F5F3;
+      /* Subtils fonds de contrastes */
+
+      /* Bordures & Ombres Restreintes */
+      --color-border: #E2E8E4;
+      --color-border-hover: #BCD1C3;
+      --color-border-dark: rgba(255, 255, 255, 0.12);
+
+      /* Typographie System */
+      --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+      /* Spacing & Radius (Éditorial corporate raffiné) */
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-full: 9999px;
+
+      --max-width: 1040px;
+      --transition-base: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Reset & Modèle de boîte */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      background-color: var(--color-bg-base);
+      color: var(--color-text-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-body);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Accessibilité focus */
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--color-brand-green);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Layout Global Responsive */
+    .site-wrapper {
+      width: 100%;
+      max-width: var(--max-width);
+      background: var(--color-bg-base);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Desktop Outer Frame adjustment */
+    @media (min-width: 1080px) {
+      body {
+        background-color: #EBF0EC;
+        padding: 32px 0;
+      }
+
+      .site-wrapper {
+        border-radius: 20px;
+        box-shadow: 0 12px 48px rgba(13, 46, 22, 0.07);
+        border: 1px solid var(--color-border);
+        overflow: hidden;
+      }
+    }
+
+    /* ==========================================================================
+       HEADER & NAVIGATION ÉPURÉE
+       ========================================================================== */
+    .site-header {
+      background: var(--color-bg-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: 16px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo-link {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Logo 1-2-1 Dots discret et élégant */
+    .brand-dots {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .brand-dot {
+      width: 15px;
+      height: 15px;
+      background-color: var(--color-brand-green);
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .brand-dots-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .brand-name-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: 0.05em;
+      color: var(--color-text-title);
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.02em;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* Nav Links sur Desktop */
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-link {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-text-body);
+      text-decoration: none;
+      transition: var(--transition-base);
+    }
+
+    .nav-link:hover {
+      color: var(--color-brand-green);
+    }
+
+    .nav-btn-contact {
+      padding: 8px 16px;
+      background: var(--color-primary-dark);
+      color: #FFFFFF !important;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+
+    .nav-btn-contact:hover {
+      background: var(--color-primary-medium);
+    }
+
+    @media (min-width: 768px) {
+      .site-header {
+        padding: 20px 40px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    /* ==========================================================================
+       SECTION HERO : POSITIONNEMENT CORPORATE & ÉDITORIAL (SANS PILL BAADGE AI)
+       ========================================================================== */
+    .hero-section {
+      padding: 48px 24px 40px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--color-border);
+      background: linear-gradient(180deg, #FFFFFF 0%, var(--color-bg-base) 100%);
+    }
+
+    /* Style Éditorial Presse / Corporate (Remplacement de la pilule AI) */
+    .hero-editorial-tag {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .editorial-accent-line {
+      width: 24px;
+      height: 2px;
+      background-color: var(--color-brand-green);
+      display: inline-block;
+    }
+
+    .editorial-tag-text {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-brand-green);
+    }
+
+    .hero-headline {
+      font-family: var(--font-heading);
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--color-text-title);
+      line-height: 1.25;
+      margin-bottom: 18px;
+      max-width: 840px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-headline span.accent {
+      color: var(--color-brand-green);
+    }
+
+    .hero-support-text {
+      font-size: 1rem;
+      color: var(--color-text-body);
+      line-height: 1.65;
+      max-width: 760px;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: var(--transition-base);
+    }
+
+    .btn-primary {
+      background: var(--color-primary-dark);
+      color: #FFFFFF;
+      border: 1px solid var(--color-primary-dark);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-medium);
+      border-color: var(--color-primary-medium);
+    }
+
+    .btn-secondary {
+      background: var(--color-bg-surface);
+      color: var(--color-text-title);
+      border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-brand-green);
+      color: var(--color-brand-green);
+      background: var(--color-accent-light);
+    }
+
+    @media (min-width: 768px) {
+      .hero-section {
+        padding: 64px 40px 56px 40px;
+      }
+
+      .hero-headline {
+        font-size: 2.6rem;
+      }
+
+      .hero-support-text {
+        font-size: 1.1rem;
+      }
+
+      .btn-action {
+        width: auto;
+      }
+    }
+
+    /* ==========================================================================
+       SECTION AFROBAROMETER (AVEC LOGO OFFICIEL & INTEGRATION ELEGANTE)
+       ========================================================================== */
+    .section-padding {
+      padding: 40px 24px;
+    }
+
+    @media (min-width: 768px) {
+      .section-padding {
+        padding: 56px 40px;
+      }
+    }
+
+    .credibility-block {
+      background: var(--color-primary-dark);
+      color: #FFFFFF;
+      border-radius: var(--radius-md);
+      padding: 32px 24px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .credibility-header-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Integration du Logo officiel Afrobarometer */
+    .afrobarometer-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+    }
+
+    .afrobarometer-svg-logo {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .afrobarometer-brand-name {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1rem;
+      color: #1A211E;
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+
+    .afrobarometer-brand-sub {
+      font-size: 0.6875rem;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .credibility-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-accent-green);
+      display: block;
+    }
+
+    .credibility-heading {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 14px;
+      color: #FFFFFF;
+    }
+
+    .credibility-text {
+      font-size: 0.9375rem;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.6;
+      margin-bottom: 24px;
+      max-width: 780px;
+    }
+
+    .credibility-stats {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--color-border-dark);
+    }
+
+    @media (min-width: 600px) {
+      .credibility-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .stat-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-val {
+      font-family: var(--font-heading);
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--color-accent-green);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-desc {
+      font-size: 0.8125rem;
+      color: rgba(255, 255, 255, 0.75);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       SECTION CARTE RÉELLE MENA (LEAFLET.JS INTEGRATION)
+       ========================================================================== */
+    .mena-section {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 28px 20px;
+    }
+
+    @media (min-width: 768px) {
+      .mena-section {
+        padding: 36px 32px;
+      }
+    }
+
+    .section-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-brand-green);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .section-h2 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--color-text-title);
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    /* Conteneur Leaflet Map */
+    .map-frame {
+      width: 100%;
+      height: 340px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (min-width: 768px) {
+      .map-frame {
+        height: 420px;
+      }
+    }
+
+    /* Selector Pills des 8 pays */
+    .country-pills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+      list-style: none;
+    }
+
+    .country-tab-btn {
+      background: var(--color-bg-subtle);
+      border: 1px solid var(--color-border);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text-body);
+      cursor: pointer;
+      transition: var(--transition-base);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .country-tab-btn:hover,
+    .country-tab-btn.active {
+      background: var(--color-primary-dark);
+      color: #FFFFFF;
+      border-color: var(--color-primary-dark);
+    }
+
+    /* Box de détail du pays sélectionné */
+    .country-info-card {
+      margin-top: 16px;
+      padding: 16px 20px;
+      background: var(--color-accent-light);
+      border-left: 4px solid var(--color-brand-green);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.875rem;
+      color: var(--color-text-title);
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       SECTION SAVOIR-FAIRE (NOTRE MÉTIER - VALUE CHAIN)
+       ========================================================================== */
+    .process-chain {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .process-step-card {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: flex-start;
+      transition: var(--transition-base);
+    }
+
+    .process-step-card:hover {
+      border-color: var(--color-border-hover);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    }
+
+    .step-number {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--color-brand-green);
+      background: var(--color-accent-light);
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-body h3 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-text-title);
+      margin-bottom: 6px;
+    }
+
+    .step-body p {
+      font-size: 0.875rem;
+      color: var(--color-text-body);
+      line-height: 1.55;
+    }
+
+    @media (min-width: 768px) {
+      .process-chain {
+        grid-template-columns: 1fr 1fr;
+        display: grid;
+      }
+    }
+
+    /* ==========================================================================
+       SECTION PUBLICATING ET PUBLICATIONS (NOUVELLE FORMULATION NATURELLE)
+       ========================================================================== */
+    .cta-hub-block {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 36px 24px;
+      text-align: left;
+    }
+
+    @media (min-width: 768px) {
+      .cta-hub-block {
+        padding: 44px 36px;
+      }
+    }
+
+    .cta-hub-title {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--color-text-title);
+      margin-bottom: 8px;
+    }
+
+    .cta-hub-sub {
+      font-size: 0.9375rem;
+      color: var(--color-text-muted);
+      margin-bottom: 24px;
+      max-width: 640px;
+    }
+
+    .cta-links-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .cta-links-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .hub-link-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--color-bg-subtle);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--color-text-title);
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: var(--transition-base);
+    }
+
+    .hub-link-card:hover {
+      border-color: var(--color-brand-green);
+      background: var(--color-bg-surface);
+      color: var(--color-brand-green);
+    }
+
+    .hub-link-card.primary {
+      background: var(--color-brand-green);
+      color: #FFFFFF;
+      border-color: var(--color-brand-green);
+      grid-column: 1 / -1;
+    }
+
+    .hub-link-card.primary:hover {
+      background: var(--color-brand-hover);
+      color: #FFFFFF;
+    }
+
+    .icon-svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    /* ==========================================================================
+       SECTION CONTACT INSTITUTIONNEL & FOOTER COMPLET
+       ========================================================================== */
+    .contact-section {
+      background: var(--color-primary-dark);
+      color: #FFFFFF;
+      padding: 48px 24px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    @media (min-width: 768px) {
+      .contact-section {
+        padding: 56px 40px;
+      }
+    }
+
+    .contact-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-accent-green);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .contact-title {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #FFFFFF;
+    }
+
+    .contact-lead {
+      font-size: 0.9375rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 32px;
+      max-width: 600px;
+    }
+
+    .contact-details-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    @media (min-width: 600px) {
+      .contact-details-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .contact-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--color-accent-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-icon svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .contact-info-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+    }
+
+    .contact-info-value {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      text-decoration: none;
+    }
+
+    .contact-info-value a {
+      color: #FFFFFF;
+      text-decoration: none;
+      transition: var(--transition-base);
+    }
+
+    .contact-info-value a:hover {
+      color: var(--color-accent-green);
+      text-decoration: underline;
+    }
+
+    .social-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border-dark);
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-sm);
+      color: #FFFFFF;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      transition: var(--transition-base);
+    }
+
+    .social-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: var(--color-accent-green);
+    }
+
+    /* FOOTER DISCRET & INSTITUTIONNEL */
+    .site-footer {
+      background: #09200F;
+      color: rgba(255, 255, 255, 0.6);
+      padding: 24px;
+      text-align: center;
+      font-size: 0.8125rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-brand {
+      color: #FFFFFF;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .footer-links-inline {
+      margin: 8px 0;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links-inline a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+    }
+
+    .footer-links-inline a:hover {
+      color: var(--color-accent-green);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="site-wrapper">
+
+    <!-- ====================================================================
+         HEADER INSTITUTIONNEL
+         ==================================================================== -->
+    <header class="site-header" role="banner">
+      <a href="https://121polling.com" target="_blank" class="brand-logo-link" aria-label="One to One Page d'accueil">
+        <div class="brand-dots" aria-hidden="true">
+          <span class="brand-dot"></span>
+          <div class="brand-dots-group">
+            <span class="brand-dot"></span>
+            <span class="brand-dot"></span>
+          </div>
+          <span class="brand-dot"></span>
+        </div>
+        <div class="brand-name-block">
+          <span class="brand-title">ONE TO ONE</span>
+          <span class="brand-subtitle">for Research and Polling</span>
+        </div>
+      </a>
+
+      <nav aria-label="Navigation principale">
+        <ul class="nav-links">
+          <li><a href="#expertise" class="nav-link">Nos expertises</a></li>
+          <li><a href="#presence-mena" class="nav-link">Notre présence</a></li>
+          <li><a href="#afrobarometer" class="nav-link">Afrobarometer</a></li>
+          <li><a href="#contact" class="nav-link nav-btn-contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- ====================================================================
+         1. HERO SECTION : POSITIONNEMENT ÉDITORIAL SANS PILL BAADGE AI
+         ==================================================================== -->
+    <section class="hero-section" aria-label="Présentation générale">
+      <!-- Trait de séparation éditorial au lieu du badge en pilule AI -->
+      <div class="hero-editorial-tag">
+        <span class="editorial-accent-line"></span>
+        <span class="editorial-tag-text">Bureau d'Études & Sondages d'Opinion • Région MENA</span>
+      </div>
+
+      <!-- Slogan principal retravaillé -->
+      <h1 class="hero-headline">
+        Donner du sens à la donnée, <br>
+        <span class="accent">une voix à l'opinion.</span>
+      </h1>
+
+      <p class="hero-support-text">
+        Depuis 2014, One to One accompagne les organisations dans la compréhension des marchés, des comportements et des
+        dynamiques sociales à travers des études rigoureuses et des analyses à forte valeur décisionnelle.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#expertise" class="btn-action btn-primary">Notre chaîne de valeur</a>
+        <a href="#presence-mena" class="btn-action btn-secondary">Présence dans 8 pays MENA</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         2. CREDIBILITÉ & LOGO OFFICIEL AFROBAROMETER
+         ==================================================================== -->
+    <div class="section-padding" id="afrobarometer">
+      <div class="credibility-block">
+
+        <div class="credibility-header-wrapper">
+          <span class="credibility-label">Garantie Méthodologique Internationale</span>
+
+          <!-- LOGO OFFICIEL AFROBAROMETER AVEC LA CARTE D'AFRIQUE -->
+          <div class="afrobarometer-logo-container">
+            <svg class="afrobarometer-svg-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Fond bulle de dialogue avec segments Orange et Rouge -->
+              <path
+                d="M 50 5 C 25.1 5 5 25.1 5 50 C 5 62.5 10.1 73.8 18.4 81.9 L 12 95 L 29.5 90.2 C 35.7 93.3 42.6 95 50 95 C 74.9 95 95 74.9 95 50 C 95 25.1 74.9 5 50 5 Z"
+                fill="#E55325" />
+              <path d="M 50 5 C 65.5 5 79.1 12.8 87.2 24.8 L 65 50 L 50 5 Z" fill="#AD282B" />
+              <path d="M 95 50 C 95 65.2 87.5 78.7 75.8 86.8 L 65 50 L 95 50 Z" fill="#AD282B" />
+              <!-- Silhouette Continent Afrique en Blanc -->
+              <path
+                d="M 46 22 C 40 23 37 26 36 28 C 34 32 37 36 36 40 C 35 42 33 43 33 45 C 33 47 38 48 39 50 C 40 52 38 54 37 57 C 36 60 40 64 42 67 C 44 70 45 75 48 78 C 50 80 52 75 52 72 C 52 69 55 64 56 62 C 58 60 63 56 64 54 C 66 52 63 49 61 47 C 60 45 66 43 65 40 C 64 37 58 35 56 31 C 55 28 50 22 46 22 Z"
+                fill="#FFFFFF" />
+            </svg>
+            <div>
+              <div class="afrobarometer-brand-name">AFROBAROMETER</div>
+              <div class="afrobarometer-brand-sub">National Partner • Tunisie</div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="credibility-heading">
+          Partenaire National Officiel d'Afrobarometer en Tunisie
+        </h2>
+        <p class="credibility-text">
+          One to One est le pôle de référence choisi par Afrobarometer — réseau panafricain de recherche indépendant —
+          pour mener les enquêtes d'opinion publique sur la démocratie, la gouvernance et les enjeux socio-économiques.
+        </p>
+
+        <div class="credibility-stats">
+          <div class="stat-box">
+            <span class="stat-val">10+</span>
+            <span class="stat-desc">Ans de rigueur scientifique et d'expertise terrain</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val">100%</span>
+            <span class="stat-desc">Conformité aux normes méthodologiques internationales</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         3. ENVERGURE RÉGIONALE (CARTE GEOGRAPHIQUE RÉELLE LEAFLET.JS)
+         ==================================================================== -->
+    <div class="section-padding" id="presence-mena">
+      <div class="mena-section">
+        <span class="section-tag">Ancrage Territorial</span>
+        <h2 class="section-h2">Présence directe dans 8 pays de la région MENA</h2>
+
+        <!-- Conteneur de carte Leaflet.js -->
+        <div id="mena-leaflet-map" class="map-frame" aria-label="Carte interactive des 8 pays MENA"></div>
+
+        <!-- Pilules des 8 pays -->
+        <ul class="country-pills-list" role="tablist" aria-label="Sélection des pays">
+          <li><button class="country-tab-btn active" id="btn-tn" onclick="selectCountry('tn')">🇹🇳 Tunisie</button>
+          </li>
+          <li><button class="country-tab-btn" id="btn-ma" onclick="selectCountry('ma')">🇲🇦 Maroc</button></li>
+          <li><button class="country-tab-btn" id="btn-dz" onclick="selectCountry('dz')">🇩🇿 Algérie</button></li>
+          <li><button class="country-tab-btn" id="btn-mr" onclick="selectCountry('mr')">🇲🇷 Mauritanie</button></li>
+          <li><button class="country-tab-btn" id="btn-eg" onclick="selectCountry('eg')">🇪🇬 Égypte</button></li>
+          <li><button class="country-tab-btn" id="btn-sd" onclick="selectCountry('sd')">🇸🇩 Soudan</button></li>
+          <li><button class="country-tab-btn" id="btn-jo" onclick="selectCountry('jo')">🇯🇴 Jordanie</button></li>
+          <li><button class="country-tab-btn" id="btn-sa" onclick="selectCountry('sa')">🇸🇦 Arabie Saoudite</button>
+          </li>
+        </ul>
+
+        <!-- Fiche d'information pays -->
+        <div class="country-info-card" id="country-info-display">
+          <strong>🇹🇳 Tunisie (Siège Social)</strong> : Centre d'excellence opérationnel, pôle d'enquête Afrobarometer
+          et coordination des études régionales.
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         4. NOTRE MÉTIER : CHAÎNE DE VALEUR COMPLÈTE
+         ==================================================================== -->
+    <div class="section-padding" id="expertise">
+      <span class="section-tag">Savoir-faire Méthodologique</span>
+      <h2 class="section-h2">Une chaîne de valeur complète et rigoureuse</h2>
+
+      <div class="process-chain">
+        <div class="process-step-card">
+          <div class="step-number">01</div>
+          <div class="step-body">
+            <h3>Collecte Terrain Rigoureuse</h3>
+            <p>Enquêtes en face-à-face (CAPI), téléphoniques (CATI) et digitales menées avec empathie par des enquêteurs
+              natifs qualifiés.</p>
+          </div>
+        </div>
+
+        <div class="process-step-card">
+          <div class="step-number">02</div>
+          <div class="step-body">
+            <h3>Traitement & Apurement</h3>
+            <p>Nettoyage approfondi des fichiers de données, contrôle d'échantillonnage et codification méticuleuse pour
+              une fiabilité totale.</p>
+          </div>
+        </div>
+
+        <div class="process-step-card">
+          <div class="step-number">03</div>
+          <div class="step-body">
+            <h3>Analyse Statistique & Humaine</h3>
+            <p>Modélisation de données, croisements socio-démographiques et mise en perspective du contexte culturel
+              local.</p>
+          </div>
+        </div>
+
+        <div class="process-step-card">
+          <div class="step-number">04</div>
+          <div class="step-body">
+            <h3>Interprétation Stratégique</h3>
+            <p>Restitution sous forme de recommandations d'action concrètes et opérationnelles pour les décideurs
+              publics et privés.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         5. EXPLORER NOS TRAVAUX & PUBLICATIONS (FORMULATION NATURELLE)
+         ==================================================================== -->
+    <div class="section-padding">
+      <div class="cta-hub-block">
+        <h2 class="cta-hub-title">Explorer nos travaux et nos publications</h2>
+        <p class="cta-hub-sub">Accédez à nos derniers rapports d'études, sondages et analyses sectorielles.</p>
+
+        <div class="cta-links-grid">
+          <a href="https://121polling.com" target="_blank" class="hub-link-card primary">
+            <span>Visiter le site institutionnel (121polling.com)</span>
+            <svg class="icon-svg" viewBox="0 0 24 24">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </a>
+
+          <a href="https://www.linkedin.com/company/121polling/posts/?feedView=all" target="_blank"
+            class="hub-link-card">
+            <span>Suivre nos études sur LinkedIn</span>
+            <svg class="icon-svg" viewBox="0 0 24 24">
+              <path
+                d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.75a1.45 1.45 0 1 0 0 2.9 1.45 1.45 0 0 0 0-2.9z" />
+            </svg>
+          </a>
+
+          <a href="https://www.facebook.com/profile.php?id=100063693725066" target="_blank" class="hub-link-card">
+            <span>Rejoindre notre communauté sur Facebook</span>
+            <svg class="icon-svg" viewBox="0 0 24 24">
+              <path
+                d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.69c0-2.47 1.47-3.83 3.72-3.83 1.08 0 2.21.19 2.21.19v2.43h-1.25c-1.23 0-1.61.76-1.61 1.54V12h2.73l-.44 3h-2.29v6.8c4.56-.93 8-4.96 8-9.8z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         6. BLOC DE CONTACT INSTITUTIONNEL OFFICIEL
+         ==================================================================== -->
+    <section class="contact-section" id="contact" aria-label="Informations de contact">
+      <span class="contact-tag">Contactez-nous</span>
+      <h2 class="contact-title">Échangeons autour de votre problématique</h2>
+      <p class="contact-lead">Une question, un projet d’étude ou un besoin d’analyse ? Nos équipes d'experts sont à
+        votre écoute.</p>
+
+      <div class="contact-details-grid">
+        <!-- Adresse -->
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+          </div>
+          <div>
+            <div class="contact-info-label">Adresse</div>
+            <div class="contact-info-value">26, avenue Chedly Zouiten, Tunis, Tunisia</div>
+          </div>
+        </div>
+
+        <!-- Téléphone -->
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+            </svg>
+          </div>
+          <div>
+            <div class="contact-info-label">Téléphone</div>
+            <div class="contact-info-value"><a href="tel:+21671845155">71 845 155</a></div>
+          </div>
+        </div>
+
+        <!-- E-mail -->
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+            </svg>
+          </div>
+          <div>
+            <div class="contact-info-label">E-mail</div>
+            <div class="contact-info-value"><a href="mailto:info@121polling.com">info@121polling.com</a></div>
+          </div>
+        </div>
+
+        <!-- Site Web -->
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+            </svg>
+          </div>
+          <div>
+            <div class="contact-info-label">Site Web</div>
+            <div class="contact-info-value"><a href="https://121polling.com" target="_blank">121polling.com</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Réseaux Sociaux -->
+      <div class="social-row">
+        <a href="https://www.linkedin.com/company/121polling/posts/?feedView=all" target="_blank" class="social-btn">
+          <svg class="icon-svg" viewBox="0 0 24 24">
+            <path
+              d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.75a1.45 1.45 0 1 0 0 2.9 1.45 1.45 0 0 0 0-2.9z" />
+          </svg>
+          <span>LinkedIn</span>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=100063693725066" target="_blank" class="social-btn">
+          <svg class="icon-svg" viewBox="0 0 24 24">
+            <path
+              d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.69c0-2.47 1.47-3.83 3.72-3.83 1.08 0 2.21.19 2.21.19v2.43h-1.25c-1.23 0-1.61.76-1.61 1.54V12h2.73l-.44 3h-2.29v6.8c4.56-.93 8-4.96 8-9.8z" />
+          </svg>
+          <span>Facebook</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- FOOTER INSTITUTIONNEL FINAL -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-brand">ONE TO ONE for Research and Polling</div>
+      <div>26, avenue Chedly Zouiten, Tunis, Tunisia • 71 845 155 • info@121polling.com</div>
+      <div class="footer-links-inline">
+        <a href="https://121polling.com" target="_blank">121polling.com</a> |
+        <a href="https://www.facebook.com/profile.php?id=100063693725066" target="_blank">Facebook</a> |
+        <a href="https://www.linkedin.com/company/121polling/posts/?feedView=all" target="_blank">LinkedIn</a>
+      </div>
+      <div style="margin-top: 8px; opacity: 0.7;">
+        Fondé en 2014 • Tunis, Tunisie • Couverture Régionale MENA
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Leaflet JS for Real Geographical Map -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script>
+    // Données des 8 pays MENA avec coordonnées GPS réelles
+    const countries = {
+      tn: {
+        name: "Tunisie",
+        flag: "🇹🇳",
+        coords: [33.8869, 9.5375],
+        desc: "<strong>🇹🇳 Tunisie (Siège Social)</strong> : Centre d'excellence opérationnel, pôle national d'enquête Afrobarometer et coordination des études régionales."
+      },
+      ma: {
+        name: "Maroc",
+        flag: "🇲🇦",
+        coords: [31.7917, -7.0926],
+        desc: "<strong>🇲🇦 Maroc</strong> : Dispositif terrain permanent pour les études de marché, de satisfaction et sondages d'opinion."
+      },
+      dz: {
+        name: "Algérie",
+        flag: "🇩🇿",
+        coords: [28.0339, 1.6596],
+        desc: "<strong>🇩🇿 Algérie</strong> : Enquêtes socio-économiques et sondages auprès des ménages en milieux urbains et ruraux."
+      },
+      mr: {
+        name: "Mauritanie",
+        flag: "🇲🇷",
+        coords: [20.0079, -10.9408],
+        desc: "<strong>🇲🇷 Mauritanie</strong> : Études de terrain spécialisées et évaluation d'impact de projets de développement."
+      },
+      eg: {
+        name: "Égypte",
+        flag: "🇪🇬",
+        coords: [26.8206, 30.8025],
+        desc: "<strong>🇪🇬 Égypte</strong> : Études de comportement consommateur et sondages d'opinion à grande échelle."
+      },
+      sd: {
+        name: "Soudan",
+        flag: "🇸🇩",
+        coords: [15.8628, 30.2176],
+        desc: "<strong>🇸🇩 Soudan</strong> : Collecte de données terrain et suivi d'opinion dans les zones accessibles."
+      },
+      jo: {
+        name: "Jordanie",
+        flag: "🇯🇴",
+        coords: [31.2000, 36.5000],
+        desc: "<strong>🇯🇴 Jordanie</strong> : Recherche d'opinion, études de politiques publiques et perception citoyenne."
+      },
+      sa: {
+        name: "Arabie Saoudite",
+        flag: "🇸🇦",
+        coords: [23.8859, 45.0792],
+        desc: "<strong>🇸🇦 Arabie Saoudite</strong> : Études de marché stratégiques, baromètres de satisfaction et études sectorielles."
+      }
+    };
+
+    let map;
+    const markers = {};
+
+    function initMap() {
+      map = L.map('mena-leaflet-map', {
+        center: [25.0, 18.0],
+        zoom: 3,
+        zoomControl: true,
+        scrollWheelZoom: false
+      });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+      }).addTo(map);
+
+      Object.keys(countries).forEach(code => {
+        const item = countries[code];
+        const isHQ = (code === 'tn');
+
+        const circleMarker = L.circleMarker(item.coords, {
+          radius: isHQ ? 10 : 7,
+          fillColor: '#1F9648',
+          color: isHQ ? '#0D2E16' : '#154D26',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.85
+        }).addTo(map);
+
+        circleMarker.bindTooltip(`<b>${item.flag} ${item.name}</b>`, {
+          permanent: false,
+          direction: 'top'
+        });
+
+        circleMarker.on('click', () => {
+          selectCountry(code);
+        });
+
+        markers[code] = circleMarker;
+      });
+    }
+
+    function selectCountry(code) {
+      if (!countries[code]) return;
+
+      document.querySelectorAll('.country-tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-${code}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const infoBox = document.getElementById('country-info-display');
+      if (infoBox) {
+        infoBox.innerHTML = countries[code].desc;
+      }
+
+      if (map && countries[code].coords) {
+        map.flyTo(countries[code].coords, code === 'tn' ? 5 : 4, {
+          duration: 1.2
+        });
+      }
+
+      Object.keys(markers).forEach(k => {
+        const m = markers[k];
+        if (k === code) {
+          m.setStyle({ fillColor: '#2BE06B', radius: 12, weight: 3 });
+        } else {
+          m.setStyle({ fillColor: '#1F9648', radius: k === 'tn' ? 10 : 7, weight: 2 });
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initMap();
+    });
+  </script>
+</body>
+
+</html>
